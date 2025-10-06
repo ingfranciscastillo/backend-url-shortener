@@ -4,6 +4,8 @@ import sensible from "@fastify/sensible";
 import rateLimit from "@fastify/rate-limit";
 import dotenv from "dotenv";
 import { urlRoutes } from "./routes/urls";
+import fastifyHelmet from "@fastify/helmet";
+import fastifyJwt from "@fastify/jwt";
 
 dotenv.config();
 
@@ -18,15 +20,21 @@ const fastify = Fastify({
 
 await fastify.register(urlRoutes);
 
+// Cors
 await fastify.register(cors, {
   origin: true,
 });
 
+// Sensible
 await fastify.register(sensible);
 
+// Helmet
+await fastify.register(fastifyHelmet);
+
+// Rate Limit
 await fastify.register(rateLimit, {
   max: 100,
-  timeWindow: "1 minute",
+  timeWindow: "15 minute",
   errorResponseBuilder: (req, context) => {
     return {
       code: 429,

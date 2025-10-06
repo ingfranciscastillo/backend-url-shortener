@@ -4,20 +4,41 @@
 
 ## 🚀 Stack Tecnológico
 
-- **Fastify 4.x** - Framework web ultrarrápido (~30k req/seg)
+- **Fastify** - Framework web ultrarrápido (~30k req/seg)
 - **PostgreSQL** - Base de datos relacional
 - **Drizzle ORM** - ORM TypeScript-first, type-safe
 - **Zod** - Validación de esquemas robusta
 - **nanoid** - Generador de IDs únicos y seguros
 - **TypeScript** - Tipado estático completo
 
-## 📝 Licencia
-
-MIT © 2025
-
 ---
 
-**Desarrollado con ❤️ usando Fastify + PostgreSQL + TypeScript**
+## 🗂️ Estructura del Proyecto
+
+```
+backend/
+├── src/
+│   ├── controllers/
+│   │   └── urlsController.ts    # Lógica de negocio
+│   ├── db/
+│   │   ├── client.ts             # Cliente Drizzle
+│   │   └── schema.ts             # Definición del schema
+│   ├── routes/
+│   │   └── urls.ts               # Definición de rutas
+│   ├── schemas/
+│   │   └── urlSchema.ts          # Validaciones Zod
+│   ├── utils/
+│   │   └── generateCode.ts       # Generador de códigos
+│   └── server.ts                 # Entry point
+├── drizzle/                      # Migraciones generadas
+├── drizzle.config.ts             # Config de Drizzle
+├── package.json
+├── tsconfig.json
+├── .env
+└── README.md
+```
+
+---
 
 ## 📦 Instalación Rápida
 
@@ -214,35 +235,6 @@ CREATE INDEX idx_short_code ON urls(short_code);
 - `click_count` - Contador de clics (inicia en 0)
 - `created_at` - Timestamp de creación
 
----
-
-## 🗂️ Estructura del Proyecto
-
-```
-backend/
-├── src/
-│   ├── controllers/
-│   │   └── urlsController.ts    # Lógica de negocio
-│   ├── db/
-│   │   ├── client.ts             # Cliente Drizzle
-│   │   └── schema.ts             # Definición del schema
-│   ├── routes/
-│   │   └── urls.ts               # Definición de rutas
-│   ├── schemas/
-│   │   └── urlSchema.ts          # Validaciones Zod
-│   ├── utils/
-│   │   └── generateCode.ts       # Generador de códigos
-│   └── server.ts                 # Entry point
-├── drizzle/                      # Migraciones generadas
-├── drizzle.config.ts             # Config de Drizzle
-├── package.json
-├── tsconfig.json
-├── .env
-└── README.md
-```
-
----
-
 ## 🛠️ Scripts Disponibles
 
 ```bash
@@ -256,11 +248,7 @@ npm start                # Ejecuta versión compilada
 # Base de datos
 npm run db:generate      # Genera migraciones SQL
 npm run db:push          # Aplica cambios a la BD
-npm run db:studio        # Abre Drizzle Studio (GUI)
 
-# Testing (para implementar)
-npm test                 # Ejecuta tests
-npm run test:watch       # Tests en modo watch
 ```
 
 ---
@@ -274,85 +262,6 @@ npm run test:watch       # Tests en modo watch
 ✅ **CORS** - Configurado para orígenes específicos  
 ✅ **Códigos únicos** - nanoid genera IDs seguros (URL-safe)  
 ✅ **Error handling** - @fastify/sensible maneja errores
-
-### Recomendaciones Adicionales
-
-#### Rate Limiting
-
-```bash
-npm install @fastify/rate-limit
-```
-
-```typescript
-// src/server.ts
-import rateLimit from "@fastify/rate-limit";
-
-await fastify.register(rateLimit, {
-  max: 100, // 100 requests
-  timeWindow: "15 minutes",
-});
-```
-
-#### Helmet (Security Headers)
-
-```bash
-npm install @fastify/helmet
-```
-
-```typescript
-// src/server.ts
-import helmet from "@fastify/helmet";
-
-await fastify.register(helmet);
-```
-
-#### JWT Authentication
-
-```bash
-npm install @fastify/jwt
-```
-
-```typescript
-// src/server.ts
-import jwt from "@fastify/jwt";
-
-await fastify.register(jwt, {
-  secret: process.env.JWT_SECRET!,
-});
-```
-
----
-
-## 🧪 Testing
-
-### Ejemplo con Vitest
-
-```bash
-npm install -D vitest @vitest/ui
-```
-
-```typescript
-// tests/shorten.test.ts
-import { test, expect } from "vitest";
-import { build } from "../src/server";
-
-test("POST /shorten - acorta URL válida", async () => {
-  const app = build();
-
-  const response = await app.inject({
-    method: "POST",
-    url: "/shorten",
-    payload: {
-      url: "https://www.google.com",
-    },
-  });
-
-  expect(response.statusCode).toBe(201);
-  expect(response.json()).toHaveProperty("shortUrl");
-});
-```
-
----
 
 ## 🚀 Despliegue
 
@@ -399,31 +308,6 @@ CMD ["npm", "start"]
 docker build -t url-shortener-api .
 docker run -p 3000:3000 --env-file .env url-shortener-api
 ```
-
----
-
-## 📈 Performance
-
-Fastify es extremadamente rápido:
-
-- ~30,000 req/seg (Hello World)
-- ~15,000 req/seg (con DB queries)
-- Latencia < 5ms (p99)
-
-### Benchmarks
-
-```bash
-# Instalar autocannon
-npm i -g autocannon
-
-# Benchmark POST /shorten
-autocannon -c 100 -d 30 -m POST \
-  -H "Content-Type: application/json" \
-  -b '{"url":"https://example.com"}' \
-  http://localhost:3000/shorten
-```
-
----
 
 ## 🐛 Troubleshooting
 
@@ -478,12 +362,4 @@ npm run db:push
 
 ---
 
-## 🤝 Contribuir
-
-1. Fork el repo
-2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`
-3. Commit: `git commit -m 'Agregar funcionalidad'`
-4. Push: `git push origin feature/nueva-funcionalidad`
-5. Pull Request
-
----
+Desarrollado con ❤️ usando Fastify + PostgreSQL + TypeScript
